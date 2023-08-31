@@ -6,8 +6,13 @@
 namespace fetchy {
     class Fetchy {
     public:
-        Fetchy() = default;
-        void OS();
+        Fetchy();
+
+        std::string GetDistro();
+        std::string GetDeviceName();
+        std::string GetProcessor();
+
+        void Output();
     };
 }
 
