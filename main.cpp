@@ -3,7 +3,7 @@
 #include <iostream>
 
 int main(int argc, char *argv[]) {
-    fetchy::Fetchy fetchy;
+  fetchy::Fetchy fetchy;
 
-    return EXIT_SUCCESS;
+  return EXIT_SUCCESS;
 }
