@@ -43,7 +43,22 @@ std::string Fetchy::GetDeviceName() {
   return name;
 }
 
-std::string Fetchy::GetProcessor() { return "PROCESSOR"; }
+std::string Fetchy::GetCPU() { return "CPU"; }
+
+std::string Fetchy::GetMemory() {
+  long pages = sysconf(_SC_PHYS_PAGES);
+  long page_size = sysconf(_SC_PAGE_SIZE);
+  int divisor = 1024;
+  unsigned long long int total_memory = pages * page_size;
+  int total_memory_gb = total_memory / 1024 / 1024 / 1024;
+  return std::to_string(total_memory_gb + 1) + " GB";
+}
+
+std::string Fetchy::GetKernel() {
+  struct utsname os_info {};
+  uname(&os_info);
+  return os_info.release;
+}
 
 std::string Fetchy::GetColorTag(int color) {
   std::string icon1 = "";
@@ -59,10 +74,8 @@ std::string Fetchy::GetColorTag(int color) {
 }
 
 std::string Fetchy::GetGridRow(std::string item1, std::string item2, int column_width) {
-  int spacing_count = column_width - item1.length();
+  int spacing_count = column_width - item1.length() + 40;
   std::string spacing = "";
-
-  std::cout << std::to_string(spacing_count) << "\n";
 
   for (int i = 0; i < spacing_count; i++) {
     spacing += " ";
@@ -83,18 +96,24 @@ void Fetchy::Output() {
     << ASCII::arch_ascii << "\n" 
 
     << GetGridRow(GetColorTag(Color::black) + GetDistro() + " " + GetArchitechture(),
-      GetColorTag(Color::blue) + GetDistro() + " " + GetArchitechture(), 48)
+      GetColorTag(Color::blue) + GetDistro() + " " + GetArchitechture(), 36)
 
-    << "\n"  
+    << "\n\n"  
 
-    << GetColorTag(Color::black) << GetDistro() << " " << GetArchitechture() << "\n" 
-    << GetColorTag(Color::red) << GetDeviceName() << "\n"
-    << GetColorTag(Color::green) << GetArchitechture() << "\n"
-    << GetColorTag(Color::yellow) << GetProcessor() << "\n"
-    << GetColorTag(Color::blue) << GetDistro() << " " << GetArchitechture() << "\n" 
-    << GetColorTag(Color::magenta) << GetDeviceName() << "\n"
-    << GetColorTag(Color::cyan) << GetArchitechture() << "\n"
-    << GetColorTag(Color::white) << GetProcessor() << "\n"    
+    << GetGridRow(GetColorTag(Color::red) + GetKernel(),
+      GetColorTag(Color::magenta) + GetDistro() + " " + GetArchitechture(), 36)    
+
+    << "\n\n"
+
+    << GetGridRow(GetColorTag(Color::green) + GetDeviceName(),
+      GetColorTag(Color::cyan) + GetDistro() + " " + GetArchitechture(), 36)
+
+    << "\n\n"  
+
+    << GetGridRow(GetColorTag(Color::yellow) + GetMemory(),
+      GetColorTag(Color::white) + GetDistro() + " " + GetArchitechture(), 36)    
+
+    << "\n"      
     
     << std::endl;
 }

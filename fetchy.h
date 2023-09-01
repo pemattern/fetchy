@@ -12,7 +12,9 @@ private:
   std::string GetDistro();
   std::string GetArchitechture();
   std::string GetDeviceName();
-  std::string GetProcessor();
+  std::string GetCPU();
+  std::string GetMemory();
+  std::string GetKernel();
 
   std::string GetColorTag(int color);
   std::string GetGridRow(std::string item1, std::string item2, int column_width);
