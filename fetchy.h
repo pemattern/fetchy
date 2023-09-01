@@ -15,6 +15,7 @@ private:
   std::string GetProcessor();
 
   std::string GetColorTag(int color);
+  std::string GetGridRow(std::string item1, std::string item2, int column_width);
 
   std::string BetweenDelimiter(std::string str, char delimiter);
 

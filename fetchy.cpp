@@ -1,11 +1,13 @@
 #include "fetchy.h"
 #include "color.h"
+#include "ascii.h"
 
 #include <fstream>
 #include <iostream>
 #include <regex>
 #include <string>
 
+#include <unistd.h>
 #include <sys/utsname.h>
 
 namespace fetchy {
@@ -25,7 +27,6 @@ std::string Fetchy::GetDistro() {
       break;
     }
   }
-
   return name;
 }
 
@@ -35,7 +36,12 @@ std::string Fetchy::GetArchitechture() {
   return os_info.machine;
 }
 
-std::string Fetchy::GetDeviceName() { return "DEVICE NAME"; }
+std::string Fetchy::GetDeviceName() {
+  std::ifstream file("/sys/devices/virtual/dmi/id/product_version");
+  std::string name;
+  std::getline(file, name);
+  return name;
+}
 
 std::string Fetchy::GetProcessor() { return "PROCESSOR"; }
 
@@ -48,8 +54,21 @@ std::string Fetchy::GetColorTag(int color) {
          icon1 + Color::reset;
   tag += Color::AnsiEscape(color + Color::to_bright) + icon2 + icon3 +
          Color::reset;
-
+  tag += " ";
   return tag;
+}
+
+std::string Fetchy::GetGridRow(std::string item1, std::string item2, int column_width) {
+  int spacing_count = column_width - item1.length();
+  std::string spacing = "";
+
+  std::cout << std::to_string(spacing_count) << "\n";
+
+  for (int i = 0; i < spacing_count; i++) {
+    spacing += " ";
+  }
+
+  return item1 + spacing + item2;
 }
 
 std::string Fetchy::BetweenDelimiter(std::string str, char delimiter) {
@@ -60,7 +79,23 @@ std::string Fetchy::BetweenDelimiter(std::string str, char delimiter) {
 }
 
 void Fetchy::Output() {
-  std::cout << GetColorTag(Color::magenta) << GetDistro() << " "
-            << GetArchitechture() << std::endl;
+  std::cout << "\n"
+    << ASCII::arch_ascii << "\n" 
+
+    << GetGridRow(GetColorTag(Color::black) + GetDistro() + " " + GetArchitechture(),
+      GetColorTag(Color::blue) + GetDistro() + " " + GetArchitechture(), 48)
+
+    << "\n"  
+
+    << GetColorTag(Color::black) << GetDistro() << " " << GetArchitechture() << "\n" 
+    << GetColorTag(Color::red) << GetDeviceName() << "\n"
+    << GetColorTag(Color::green) << GetArchitechture() << "\n"
+    << GetColorTag(Color::yellow) << GetProcessor() << "\n"
+    << GetColorTag(Color::blue) << GetDistro() << " " << GetArchitechture() << "\n" 
+    << GetColorTag(Color::magenta) << GetDeviceName() << "\n"
+    << GetColorTag(Color::cyan) << GetArchitechture() << "\n"
+    << GetColorTag(Color::white) << GetProcessor() << "\n"    
+    
+    << std::endl;
 }
 } // namespace fetchy
