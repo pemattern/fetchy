@@ -39,13 +39,15 @@ std::string Fetchy::GetDeviceName() { return "DEVICE NAME"; }
 
 std::string Fetchy::GetProcessor() { return "PROCESSOR"; }
 
-std::string Fetchy::GetColorTag(std::string color, std::string bg_color,
-                                std::string bright_color,
-                                std::string bg_bright_color) {
-  std::string icon = "";
-  std::string tag = color + icon + Color::end;
-  tag += bright_color + bg_color + icon + Color::end;
-  tag += Color::transparent + bg_bright_color + icon + Color::end;
+std::string Fetchy::GetColorTag(int color) {
+  std::string icon1 = "";
+  std::string icon2 = "█";
+  std::string icon3 = "";
+  std::string tag = Color::AnsiEscape(color) + icon1 + icon2 + Color::reset;
+  tag += Color::AnsiEscape(color + Color::to_bright, color + Color::to_bg) +
+         icon1 + Color::reset;
+  tag += Color::AnsiEscape(color + Color::to_bright) + icon2 + icon3 +
+         Color::reset;
 
   return tag;
 }
@@ -58,8 +60,7 @@ std::string Fetchy::BetweenDelimiter(std::string str, char delimiter) {
 }
 
 void Fetchy::Output() {
-  std::cout << GetColorTag(Color::magenta, Color::bg_magenta,
-                           Color::bright_magenta, Color::bg_bright_magenta)
-            << GetDistro() << " " << GetArchitechture() << std::endl;
+  std::cout << GetColorTag(Color::magenta) << GetDistro() << " "
+            << GetArchitechture() << std::endl;
 }
 } // namespace fetchy
