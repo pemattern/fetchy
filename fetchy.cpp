@@ -43,7 +43,19 @@ std::string Fetchy::GetDeviceName() {
   return name;
 }
 
-std::string Fetchy::GetCPU() { return "CPU"; }
+std::string Fetchy::GetCPU() {
+  std::ifstream file("/proc/cpuinfo");
+  std::string line;
+
+  while(std::getline(file, line)) {
+    if (line.find("model name") != std::string::npos) {
+      size_t pos = line.find(": ");
+      std::string name = line.erase(0, pos + 2);
+      return name;
+    }
+  }
+  return "No CPU";
+}
 
 std::string Fetchy::GetMemory() {
   long pages = sysconf(_SC_PHYS_PAGES);
@@ -51,7 +63,7 @@ std::string Fetchy::GetMemory() {
   int divisor = 1024;
   unsigned long long int total_memory = pages * page_size;
   int total_memory_gb = total_memory / 1024 / 1024 / 1024;
-  return std::to_string(total_memory_gb + 1) + " GB";
+  return std::to_string(total_memory_gb + 1) + "GB";
 }
 
 std::string Fetchy::GetKernel() {
@@ -101,7 +113,7 @@ void Fetchy::Output() {
     << "\n\n"  
 
     << GetGridRow(GetColorTag(Color::red) + GetKernel(),
-      GetColorTag(Color::magenta) + GetDistro() + " " + GetArchitechture(), 36)    
+      GetColorTag(Color::magenta) + GetCPU(), 36)    
 
     << "\n\n"
 
