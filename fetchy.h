@@ -13,12 +13,11 @@ private:
   std::string GetArchitechture();
   std::string GetDeviceName();
   std::string GetCPU();
+  std::string GetGPU();
   std::string GetMemory();
   std::string GetKernel();
-
-  std::string GetColorTag(int color);
-  std::string GetGridRow(std::string item1, std::string item2, int column_width);
-
+  std::string GetDiskCapacity();
+  std::string GetColorTag(int color, std::string icon);
   std::string BetweenDelimiter(std::string str, char delimiter);
 
   void Output();

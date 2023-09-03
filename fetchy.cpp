@@ -49,12 +49,28 @@ std::string Fetchy::GetCPU() {
 
   while(std::getline(file, line)) {
     if (line.find("model name") != std::string::npos) {
-      size_t pos = line.find(": ");
-      std::string name = line.erase(0, pos + 2);
+      std::string name = line;
+
+      size_t pos = name.find(": ");
+      if (pos != std::string::npos)
+        name = name.erase(0, pos + 2);
+
+      pos = name.find_last_of(")");
+      if (pos != std::string::npos)
+        name = name.erase(0, pos + 2);
+
+      pos = name.find("CPU");
+      if (pos != std::string::npos)
+        name = name.erase(pos, 4);
+      
       return name;
     }
   }
   return "No CPU";
+}
+
+std::string Fetchy::GetGPU() {
+  return "RX 6600 XT";
 }
 
 std::string Fetchy::GetMemory() {
@@ -72,11 +88,16 @@ std::string Fetchy::GetKernel() {
   return os_info.release;
 }
 
-std::string Fetchy::GetColorTag(int color) {
+std::string Fetchy::GetColorTag(int color, std::string icon) {
   std::string icon1 = "";
   std::string icon2 = "█";
   std::string icon3 = "";
-  std::string tag = Color::AnsiEscape(color) + icon1 + icon2 + Color::reset;
+  std::string tag = Color::AnsiEscape(color) + icon2 + Color::reset;
+  
+  tag += Color::AnsiEscape(color + Color::to_bright, color + Color::to_bg) + icon + Color::reset;
+  
+  tag += Color::AnsiEscape(color, color + Color::to_bg_bright) + icon2 + Color::reset;
+
   tag += Color::AnsiEscape(color + Color::to_bright, color + Color::to_bg) +
          icon1 + Color::reset;
   tag += Color::AnsiEscape(color + Color::to_bright) + icon2 + icon3 +
@@ -85,15 +106,8 @@ std::string Fetchy::GetColorTag(int color) {
   return tag;
 }
 
-std::string Fetchy::GetGridRow(std::string item1, std::string item2, int column_width) {
-  int spacing_count = column_width - item1.length() + 40;
-  std::string spacing = "";
-
-  for (int i = 0; i < spacing_count; i++) {
-    spacing += " ";
-  }
-
-  return item1 + spacing + item2;
+std::string Fetchy::GetDiskCapacity() {
+  return "500GB";
 }
 
 std::string Fetchy::BetweenDelimiter(std::string str, char delimiter) {
@@ -107,23 +121,35 @@ void Fetchy::Output() {
   std::cout << "\n"
     << ASCII::arch_ascii << "\n" 
 
-    << GetGridRow(GetColorTag(Color::black) + GetDistro() + " " + GetArchitechture(),
-      GetColorTag(Color::blue) + GetDistro() + " " + GetArchitechture(), 36)
+    << GetColorTag(Color::black, "") + GetDistro()
 
-    << "\n\n"  
+    << "\n"
 
-    << GetGridRow(GetColorTag(Color::red) + GetKernel(),
-      GetColorTag(Color::magenta) + GetCPU(), 36)    
+    << GetColorTag(Color::red, "󰜂") + GetArchitechture()
 
-    << "\n\n"
+    << "\n"
 
-    << GetGridRow(GetColorTag(Color::green) + GetDeviceName(),
-      GetColorTag(Color::cyan) + GetDistro() + " " + GetArchitechture(), 36)
+    << GetColorTag(Color::green, "󰹣") + GetKernel()
 
-    << "\n\n"  
+    << "\n"
 
-    << GetGridRow(GetColorTag(Color::yellow) + GetMemory(),
-      GetColorTag(Color::white) + GetDistro() + " " + GetArchitechture(), 36)    
+    << GetColorTag(Color::yellow, "󱩊") + GetDeviceName()
+
+    << "\n"
+
+    << GetColorTag(Color::blue, "") + GetCPU()
+
+    << "\n"  
+
+    << GetColorTag(Color::magenta, "󰹑") + GetGPU()   
+
+    << "\n"
+
+    << GetColorTag(Color::cyan, "") + GetMemory()
+
+    << "\n"  
+
+    << GetColorTag(Color::white, "") + GetDiskCapacity() 
 
     << "\n"      
     
