@@ -88,20 +88,14 @@ std::string Fetchy::GetKernel() {
   return os_info.release;
 }
 
-std::string Fetchy::GetColorTag(int color, std::string icon) {
-  std::string icon1 = "";
+std::string Fetchy::GetColorTag(int color, std::string icon1) {
   std::string icon2 = "█";
   std::string icon3 = "";
   std::string tag = Color::AnsiEscape(color) + icon2 + Color::reset;
-  
-  tag += Color::AnsiEscape(color + Color::to_bright, color + Color::to_bg) + icon + Color::reset;
-  
+  tag += Color::AnsiEscape(color + Color::to_bright, color + Color::to_bg) + icon1 + Color::reset;
   tag += Color::AnsiEscape(color, color + Color::to_bg_bright) + icon2 + Color::reset;
-
-  tag += Color::AnsiEscape(color + Color::to_bright, color + Color::to_bg) +
-         icon1 + Color::reset;
-  tag += Color::AnsiEscape(color + Color::to_bright) + icon2 + icon3 +
-         Color::reset;
+  tag += Color::AnsiEscape(color + Color::to_bright, color + Color::to_bg) + icon1 + Color::reset;
+  tag += Color::AnsiEscape(color + Color::to_bright) + icon2 + icon3 + Color::reset;
   tag += " ";
   return tag;
 }
@@ -118,7 +112,7 @@ std::string Fetchy::BetweenDelimiter(std::string str, char delimiter) {
 }
 
 void Fetchy::Output() {
-  std::cout << "\n"
+  std::cout
     << ASCII::arch_ascii << "\n" 
 
     << GetColorTag(Color::black, "") + GetDistro()
