@@ -88,14 +88,15 @@ std::string Fetchy::GetKernel() {
   return os_info.release;
 }
 
-std::string Fetchy::GetColorTag(int color, std::string icon1) {
-  std::string icon2 = "█";
-  std::string icon3 = "";
-  std::string tag = Color::AnsiEscape(color) + icon2 + Color::reset;
-  tag += Color::AnsiEscape(color + Color::to_bright, color + Color::to_bg) + icon1 + Color::reset;
-  tag += Color::AnsiEscape(color, color + Color::to_bg_bright) + icon2 + Color::reset;
-  tag += Color::AnsiEscape(color + Color::to_bright, color + Color::to_bg) + icon1 + Color::reset;
-  tag += Color::AnsiEscape(color + Color::to_bright) + icon2 + icon3 + Color::reset;
+std::string Fetchy::GetColorTag(int color, std::string entryIcon) {
+  std::string tri_bottom = "";
+  std::string block = "█";
+  std::string tri_top = "";
+  std::string tag = Color::AnsiEscape(color) + block + Color::reset;
+  tag += Color::AnsiEscape(color + Color::to_bright, color + Color::to_bg) + entryIcon + Color::reset;
+  tag += Color::AnsiEscape(color, color + Color::to_bg_bright) + block + Color::reset;
+  tag += Color::AnsiEscape(color + Color::to_bright, color + Color::to_bg) + tri_bottom + Color::reset;
+  tag += Color::AnsiEscape(color + Color::to_bright) + block + tri_top + Color::reset;
   tag += " ";
   return tag;
 }
