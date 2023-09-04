@@ -8,6 +8,7 @@ class ASCII {
 public:
     static std::string GetASCII(std::string distro_name);
 private:
+    // ASCII FONT NAME: SLANT
     inline static std::string arch =
         "    ___              __   \n"
         "   /   |  __________/ /_  \n"
