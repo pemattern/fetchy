@@ -6,6 +6,7 @@
 #include <iostream>
 #include <regex>
 #include <string>
+#include <filesystem>
 
 #include <unistd.h>
 #include <sys/utsname.h>
@@ -70,7 +71,7 @@ std::string Fetchy::GetCPU() {
 }
 
 std::string Fetchy::GetGPU() {
-  return "RX 6600 XT";
+  return "NOT IMPLEMENTED";
 }
 
 std::string Fetchy::GetMemory() {
@@ -102,7 +103,13 @@ std::string Fetchy::GetColorTag(int color, std::string entryIcon) {
 }
 
 std::string Fetchy::GetDiskCapacity() {
-  return "500GB";
+  std::filesystem::space_info space_info_home = std::filesystem::space("/home");
+  std::filesystem::space_info space_info_root = std::filesystem::space("/");
+
+  unsigned long long int capacity = space_info_home.capacity + space_info_root.capacity;
+  capacity /= (1024 * 1024 * 1024);
+
+  return std::to_string(capacity + 1) + "GB";
 }
 
 std::string Fetchy::BetweenDelimiter(std::string str, char delimiter) {
@@ -114,7 +121,9 @@ std::string Fetchy::BetweenDelimiter(std::string str, char delimiter) {
 
 void Fetchy::Output() {
   std::cout
-    << ASCII::arch_ascii << "\n" 
+    << ASCII::GetASCII("Ubunt")
+    
+    << "\n" 
 
     << GetColorTag(Color::black, "") + GetDistro()
 
