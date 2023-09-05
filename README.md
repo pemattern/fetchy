@@ -8,6 +8,5 @@ fetchy is small fetch tool written in C++. It's currently in development and wil
 `./fetchy`
 
 ### missing features
-- loading settings in a config file
+- loading settings from a config file
 - reading GPU data
-- reading Disk storage data
