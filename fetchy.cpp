@@ -121,7 +121,7 @@ std::string Fetchy::BetweenDelimiter(std::string str, char delimiter) {
 
 void Fetchy::Output() {
   std::cout
-    << ASCII::GetASCII(GetDistro())
+    << ASCII::Get(GetDistro())
     
     << "\n" 
 
