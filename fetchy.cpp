@@ -77,10 +77,12 @@ std::string Fetchy::GetGPU() {
 std::string Fetchy::GetMemory() {
   long pages = sysconf(_SC_PHYS_PAGES);
   long page_size = sysconf(_SC_PAGE_SIZE);
-  int divisor = 1024;
+  long free = sysconf(_SC_AVPHYS_PAGES);
   unsigned long long int total_memory = pages * page_size;
-  int total_memory_gb = total_memory / 1024 / 1024 / 1024;
-  return std::to_string(total_memory_gb + 1) + "GB";
+  unsigned long long int free_memory = free * page_size;
+  int total_memory_gb = total_memory / (1024 * 1024 * 1024);
+  int total_used_memory_gb = (total_memory - free_memory) / (1024 * 1024 * 1024);
+  return std::to_string(total_used_memory_gb) + " / " + std::to_string(total_memory_gb + 1) + "GB";
 }
 
 std::string Fetchy::GetKernel() {
@@ -102,14 +104,19 @@ std::string Fetchy::GetColorTag(int color, std::string entryIcon) {
   return tag;
 }
 
-std::string Fetchy::GetDiskCapacity() {
+std::string Fetchy::GetDiskCapacity(bool home_partition_exists) {
   std::filesystem::space_info space_info_home = std::filesystem::space("/home");
   std::filesystem::space_info space_info_root = std::filesystem::space("/");
 
-  unsigned long long int capacity = space_info_home.capacity + space_info_root.capacity;
+  unsigned long long int capacity = space_info_root.capacity;
+  if (home_partition_exists) capacity += space_info_home.capacity;
   capacity /= (1024 * 1024 * 1024);
 
-  return std::to_string(capacity + 1) + "GB";
+  unsigned long long int free = space_info_root.free;
+  if (home_partition_exists) free += space_info_home.free;
+  free /= (1024 * 1024 * 1024);
+
+  return std::to_string(capacity - free) + " / " + std::to_string(capacity) + "GB";
 }
 
 std::string Fetchy::BetweenDelimiter(std::string str, char delimiter) {
@@ -153,7 +160,7 @@ void Fetchy::Output() {
 
     << "\n"  
 
-    << GetColorTag(Color::white, "") + GetDiskCapacity() 
+    << GetColorTag(Color::white, "") + GetDiskCapacity(true) 
 
     << "\n"      
     

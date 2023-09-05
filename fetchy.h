@@ -16,7 +16,7 @@ private:
   std::string GetGPU();
   std::string GetMemory();
   std::string GetKernel();
-  std::string GetDiskCapacity();
+  std::string GetDiskCapacity(bool home_partition_exists);
   std::string GetColorTag(int color, std::string icon);
   std::string BetweenDelimiter(std::string str, char delimiter);
 
