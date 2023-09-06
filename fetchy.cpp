@@ -8,6 +8,7 @@
 #include <string>
 #include <filesystem>
 
+#include <pci/pci.h>
 #include <unistd.h>
 #include <sys/utsname.h>
 
@@ -71,7 +72,7 @@ std::string Fetchy::GetCPU() {
 }
 
 std::string Fetchy::GetGPU() {
-  return "NOT IMPLEMENTED";
+  return "GPU";
 }
 
 std::string Fetchy::GetMemory() {
