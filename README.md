@@ -9,4 +9,4 @@ fetchy is small fetch tool written in C++. It's currently in development and wil
 
 ### missing features
 - loading settings from a config file
-- reading GPU data
+- optimized GPU data: AMD and Intel GPUs take too long to load
