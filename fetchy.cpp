@@ -8,7 +8,6 @@
 #include <string>
 #include <filesystem>
 
-#include <pci/pci.h>
 #include <unistd.h>
 #include <sys/utsname.h>
 
@@ -68,11 +67,55 @@ std::string Fetchy::GetCPU() {
       return name;
     }
   }
-  return "No CPU";
+  return "No CPU Found";
 }
 
 std::string Fetchy::GetGPU() {
-  return "GPU";
+    std::string name = "";
+    const char* nvidia_query = "nvidia-smi --query-gpu=name --format=csv,noheader,nounits --id=0";
+    const char* amd_query = "lspci| grep VGA | grep AMD";
+    const char* intel_query = "lspci | grep VGA | grep 'Intel Corporation'";
+
+    auto gpu_name = [](const char *query, std::string *name) {
+      std::string result = "";
+      FILE* pipe = popen(query, "r");
+
+      char buffer[128];
+
+      while (fgets(buffer, sizeof(buffer), pipe) != nullptr) {
+        result += buffer;
+      }
+
+      pclose(pipe);
+
+      if (!result.empty() && result.back() == '\n') {
+        result.pop_back();
+      }
+
+      if (!result.empty()) {
+        int colon_pos = result.find_last_of(':');
+        if (colon_pos != std::string::npos) result = result.erase(0, colon_pos + 2);
+
+        int paren_pos = result.find_last_of('(');
+        if (paren_pos != std::string::npos) result = result.erase(paren_pos, result.length());
+      }
+
+      *name = result;
+    };
+
+    // NVIDIA
+    gpu_name(nvidia_query, &name);
+    if (!name.empty()) return name;
+
+    // AMD
+    gpu_name(amd_query, &name);
+    if (!name.empty()) return name;
+
+    // Intel Integrated
+    gpu_name(intel_query, &name);
+    if (!name.empty()) return name;
+
+    return "No GPU Found";
 }
 
 std::string Fetchy::GetMemory() {
