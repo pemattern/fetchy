@@ -160,17 +160,18 @@ namespace fetchy
     return os_info.release;
   }
 
-std::string Fetchy::GetColorTag(int color, std::string icon) {
-  std::string block = "█";
-  std::string triangle = "";
-  std::string tag = "";
-  tag += Color::AnsiEscape(color) + block + Color::reset;
-  tag += Color::AnsiEscape(color + Color::to_bright, color + Color::to_bg) + icon + Color::reset;
-  tag += Color::AnsiEscape(color, color + Color::to_bg_bright) + block + triangle + Color::reset;
-  tag += Color::AnsiEscape(color + Color::to_bright) + block + triangle + Color::reset;
-  tag += " ";
-  return tag;
-}
+  std::string Fetchy::GetColorTag(int color, std::string icon)
+  {
+    std::string block = "█";
+    std::string triangle = "";
+    std::string tag = "";
+    tag += Color::AnsiEscape(color) + block + Color::reset;
+    tag += Color::AnsiEscape(color + Color::to_bright, color + Color::to_bg) + icon + Color::reset;
+    tag += Color::AnsiEscape(color, color + Color::to_bg_bright) + block + triangle + Color::reset;
+    tag += Color::AnsiEscape(color + Color::to_bright) + block + triangle + Color::reset;
+    tag += " ";
+    return tag;
+  }
 
   std::string Fetchy::GetDiskCapacity(bool home_partition_exists)
   {
