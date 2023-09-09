@@ -4,9 +4,12 @@
 #include <sstream>
 #include <fstream>
 #include <filesystem>
+#include <stdexcept>
+#include <iostream>
 
 namespace fetchy {
 std::string Config::GetContent() {
+    std::stringstream buffer;
     std::ifstream config_stream(home_dir_ + config_dir_ + fetchy_dir_ + fetchy_file_);
     if (!config_stream)
     {
@@ -16,15 +19,13 @@ std::string Config::GetContent() {
         if (!std::filesystem::exists(home_dir_ + config_dir_ + fetchy_dir_))
             std::filesystem::create_directory(home_dir_ + config_dir_ + fetchy_dir_);
 
-        std::ofstream create_config(home_dir_ + config_dir_ + fetchy_dir_ + fetchy_file_);
-        create_config << "Config"; // Replace with default config.
-        create_config.close();
-        return "Config";
+        std::filesystem::copy(fetchy_file_, home_dir_ + config_dir_ + fetchy_dir_);
+        config_stream.open(fetchy_file_);
     }
-    std::stringstream buffer;
     buffer << config_stream.rdbuf();
+    config_stream.close();
     return buffer.str();
-};
+}
 
 Config::Config() {
     home_dir_ = getenv("HOME");

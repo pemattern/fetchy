@@ -10,8 +10,8 @@ private:
     std::string config_;
     std::string home_dir_;
     static inline std::string config_dir_ = "/.config";
-    static inline std::string fetchy_dir_ = "/fetchy";
-    static inline std::string fetchy_file_ = "/fetchy.conf";
+    static inline std::string fetchy_dir_ = "/fetchy/";
+    static inline std::string fetchy_file_ = "fetchy.conf";
 public:
     Config();
 };
