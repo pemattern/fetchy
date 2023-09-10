@@ -29,6 +29,6 @@ std::string Config::GetContent() {
 
 Config::Config() {
     home_dir_ = getenv("HOME");
-    config_ = GetContent();
+    config_raw_ = GetContent();
 }
 }

@@ -13,7 +13,9 @@
 
 namespace fetchy
 {
-  Fetchy::Fetchy() { Output(); }
+  Fetchy::Fetchy() {
+    Output();
+  }
 
   std::string Fetchy::GetDistro()
   {
@@ -173,8 +175,10 @@ namespace fetchy
     return tag;
   }
 
-  std::string Fetchy::GetDiskCapacity(bool home_partition_exists)
+  std::string Fetchy::GetDiskCapacity()
   {
+    bool home_partition_exists = true;
+
     std::filesystem::space_info space_info_home = std::filesystem::space("/home");
     std::filesystem::space_info space_info_root = std::filesystem::space("/");
 
@@ -234,7 +238,7 @@ namespace fetchy
 
         << "\n"
 
-        << GetColorTag(Color::white, "") + GetDiskCapacity(true)
+        << GetColorTag(Color::white, "") + GetDiskCapacity()
 
         << "\n"
 
